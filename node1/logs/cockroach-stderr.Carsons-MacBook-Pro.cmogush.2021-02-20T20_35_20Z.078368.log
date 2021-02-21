@@ -1,0 +1,6 @@
+I210220 20:35:20.517833 1 util/log/sync_buffer.go:196  [config] file created at: 2021/02/20 20:35:20
+I210220 20:35:20.517846 1 util/log/sync_buffer.go:196  [config] running on machine: Carsons-MacBook-Pro
+I210220 20:35:20.517850 1 util/log/sync_buffer.go:196  [config] binary: CockroachDB CCL v20.2.4 (x86_64-apple-darwin14, built 2021/01/21 00:12:56, go1.13.14)
+I210220 20:35:20.517852 1 util/log/sync_buffer.go:196  [config] arguments: [cockroach start --certs-dir=certs --store=node1 --listen-addr=localhost:26257 --http-addr=localhost:8080 --join=localhost:26257,localhost:26258,localhost:26259]
+I210220 20:35:20.517993 1 util/log/sync_buffer.go:196  [config] line format: [IWEF]yymmdd hh:mm:ss.uuuuuu goid file:line msg utf8=✓
+I210220 20:35:20.517220 1 util/log/flags.go:106  stderr capture started
