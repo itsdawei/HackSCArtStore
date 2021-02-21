@@ -41,8 +41,8 @@ async function doSubmit(txBlob) {
 
 export async function sendXrp(myAddress, mySecret, myDest) {
   let pTx = await doPrepare(myAddress, myDest);
-  let txBlob = await util.signTransaction(pTx, mySecret);
-  await util.doSubmit(txBlob);
+  let txBlob = await signTransaction(pTx, mySecret);
+  await doSubmit(txBlob);
 }
 
 export async function enableRippling(address, secret) {
@@ -99,29 +99,28 @@ export async function issueTokens(srcAddress, srcSecret, destinationAddress,
 /**
  * send a NRT from user A to user B
  */
-export async function sendTokens(data) {
-  const preparedTokenPayment = await api.preparePayment(data.sourceAddress, {
+export async function sendTokens(srcAddress, srcSecret, dstAddress, mstAddress, currency, value) {
+  const preparedTokenPayment = await api.preparePayment(srcAddress, {
     source : {
-      address : data.srcAddress,
+      address : srcAddress,
       maxAmount : {
-        value : data.value,
-        currency : data.currency,
-        counterparty : data.genesisAddress,
+        value : value,
+        currency : currency,
+        counterparty : mstAddress,
       },
     },
     destination : {
-      address : data.dstAddress,
+      address : dstAddress,
       amount : {
-        value : data.value,
-        currency : data.currency,
-        counterparty : data.genesisAddress,
+        value : value,
+        currency : currency,
+        counterparty : mstAddress,
       },
     },
   });
   const tokenPaymentResponse =
-      await api.submit(api.sign(preparedTokenPayment.txJSON, data.sourceSecret)
+      await api.submit(api.sign(preparedTokenPayment.txJSON, srcSecret)
                            .signedTransaction);
-
   console.log("Token Payment Response", tokenPaymentResponse);
 }
 

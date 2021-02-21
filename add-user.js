@@ -1,6 +1,9 @@
-var async = require('async');
-var fs = require('fs');
-var pg = require('pg');
+import * as async from "async"
+import * as fs from "fs"
+import * as pg from "pg"
+// var async = require('async');
+// var fs = require('fs');
+// var pg = require('pg');
 
 // Connect to the "users" database.
 var config = {
@@ -20,7 +23,7 @@ var config = {
 
 var pool = new pg.Pool(config);
 
-function addUser(name, add, pass, email, isartist) {
+export function addUser(name, add, pass, email, isartist) {
   var sql = "INSERT INTO info (username, address, password, email, isartist) VALUES($1, $2, $3, $4, $5);";
   pool.query(sql, [name, add, pass, email, isartist], (err, res) => {
     if (err) {
@@ -32,7 +35,7 @@ function addUser(name, add, pass, email, isartist) {
   });
 }
 
-function addArt(name, artID) {
+export function addArt(name, artID) {
   var sql ="INSERT INTO art (artID, userID) VALUES($1, $2)"
   pool.query(sql, [artID, name], (err, res) => {
     if (err) {
@@ -44,7 +47,7 @@ function addArt(name, artID) {
   });
 }
 
-function checkOwnership(artid) {
+export function checkOwnership(artid) {
   var sql = "SELECT i.username FROM info i, art a WHERE i.username=a.userid AND a.artid=$1";
   pool.query(sql, [artid], (err, res) => {
     if (err) {
@@ -57,11 +60,16 @@ function checkOwnership(artid) {
   });
 }
 
+export function changeOwnership(artid, newOwner) {
+  var sql = "UPDATE users.art SET a.userid = $1 WHERE i.username=a.userid AND a.artid= $2";
+  pool.query(sql, [newOwner, artid], (err) => {
+    if (err) {
+      throw err;
+    }
+  });
+}
+
 //checkOwnership("randomlygeneratedartpiece");
 //addArt("Carson", "randomlygeneratedartpiece");
 
 //addUser("Carson", "1111112e8igwhjdbkbkb", "pass", "email", false);
-
-
-
-
