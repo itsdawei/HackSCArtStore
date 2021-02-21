@@ -6,11 +6,11 @@ export const api = new RippleAPI({
   // by Ripple, Inc.
 });
 
-async function doPrepare(address, destination) {
+async function doPrepare(address, destination, amount) {
   const preparedTx = await api.prepareTransaction({
     TransactionType : "Payment",
     Account : address,
-    Amount : "2000000",
+    Amount : amount,
     Destination : destination,
   });
   return preparedTx;
@@ -27,7 +27,6 @@ function signTransaction(pTx, mySecret) {
 
 async function doSubmit(txBlob) {
   const latestLedgerVersion = await api.getLedgerVersion();
-
   const result = await api.submit(txBlob);
 
   console.log("Tentative result code:", result.resultCode);
@@ -39,8 +38,8 @@ async function doSubmit(txBlob) {
   return latestLedgerVersion + 1;
 }
 
-export async function sendXrp(myAddress, mySecret, myDest) {
-  let pTx = await doPrepare(myAddress, myDest);
+export async function sendXrp(myAddress, mySecret, myDest, amount) {
+  let pTx = await doPrepare(myAddress, myDest, amount);
   let txBlob = await signTransaction(pTx, mySecret);
   await doSubmit(txBlob);
 }
@@ -99,13 +98,14 @@ export async function issueTokens(srcAddress, srcSecret, destinationAddress,
 /**
  * send a NRT from user A to user B
  */
-export async function sendTokens(srcAddress, srcSecret, dstAddress, mstAddress, currency, value) {
+export async function sendTokens(srcAddress, srcSecret, dstAddress, mstAddress,
+                                 currency, value) {
   const preparedTokenPayment = await api.preparePayment(srcAddress, {
     source : {
       address : srcAddress,
       maxAmount : {
-        value : value,
-        currency : currency,
+        value,
+        currency,
         counterparty : mstAddress,
       },
     },
@@ -118,9 +118,8 @@ export async function sendTokens(srcAddress, srcSecret, dstAddress, mstAddress, 
       },
     },
   });
-  const tokenPaymentResponse =
-      await api.submit(api.sign(preparedTokenPayment.txJSON, srcSecret)
-                           .signedTransaction);
+  const tokenPaymentResponse = await api.submit(
+      api.sign(preparedTokenPayment.txJSON, srcSecret).signedTransaction);
   console.log("Token Payment Response", tokenPaymentResponse);
 }
 
