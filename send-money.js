@@ -4,13 +4,12 @@ const myDest = "rpeUYxTdoGppcVnwFcepnr9TFf3bpqWhQX";
 
 const RippleAPI = require("ripple-lib").RippleAPI;
 const api = new RippleAPI({
-    server: "wss://s.altnet.rippletest.net:51233", // Public rippled server hosted
-    // by Ripple, Inc.
-  });
-
+  server: "wss://s.altnet.rippletest.net:51233", // Public rippled server hosted
+  // by Ripple, Inc.
+});
 
 function sendMoney(myAddress, mySeret, myDest) {
-    api.on("error", (errorCode, errorMessage) => {
+  api.on("error", (errorCode, errorMessage) => {
     console.log(errorCode + ": " + errorMessage);
   });
   api.on("connected", () => {
@@ -24,9 +23,12 @@ function sendMoney(myAddress, mySeret, myDest) {
   });
   api
     .connect()
-        .then(() => {
-        enableRippling(myAddress, mySecret);
-        })
+    .then(() => {
+      enableRippling(myAddress, mySecret);
+    })
+    .then(() => {
+      openTrustline(myAddress, mySecret, myDest, "EUR");
+    })
     .then(() => {
       const preparedTx = api.prepareTransaction({
         TransactionType: "Payment",
@@ -36,19 +38,20 @@ function sendMoney(myAddress, mySeret, myDest) {
       });
       return preparedTx;
     })
-    .then((pTx) => {
-      const response = api.sign(pTx.txJSON, mySecret);
-      const txID = response.id;
-      console.log("Identifying hash:", txID);
-      const txBlob = response.signedTransaction;
-      console.log("Signed blob:", txBlob);
-      return txBlob;
-    })
-    .then((txBlob) => {
-      const result = api.submit(txBlob);
-      console.log("Tentative result code:", result.resultCode);
-      console.log("Tentative result message:", result.resultMessage);
-    })
+        .then((pTx) => {
+    const response = api.sign(pTx.txJSON, mySecret);
+    const txID = response.id;
+    console.log("Identifying hash:", txID);
+    const txBlob = response.signedTransaction;
+    console.log("Signed blob:", txBlob);
+    return txBlob
+  })
+  .then((txBlob) => {
+    const result = api.submit(txBlob)
+    console.log("Tentative result code:", result.resultCode)
+    console.log("Tentative result message:", result.resultMessage)
+
+  })
     .then(() => {
       return api.disconnect();
     })
@@ -58,11 +61,27 @@ function sendMoney(myAddress, mySeret, myDest) {
 async function enableRippling(genesisAddress, genesisSecret) {
   const preppedSettings = await api.prepareSettings(genesisAddress, {
     defaultRipple: true,
-  })
+  });
   const submittedSettings = await api.submit(
-    api.sign(preppedSettings.txJSON, genesisSecret).signedTransaction,
-  )
-  console.log('Submitted Set Default Ripple', submittedSettings)
+    api.sign(preppedSettings.txJSON, genesisSecret).signedTransaction
+  );
+  console.log("Submitted Set Default Ripple", submittedSettings);
 }
 
-sendMoney(myAddress, mySecret, myDest);
+async function openTrustline(sourceAddress, sourceSecret, genesisAddress, currency){
+  const preparedTrustline = await api.prepareTrustline(sourceAddress, {
+    currency,
+    counterparty: genesisAddress,
+    limit: '100000',
+    ripplingDisabled: false,
+  })
+
+  const signature = api.sign(preparedTrustline.txJSON, sourceSecret)
+    .signedTransaction
+
+  const submitResponse = await api.submit(signature)
+
+  console.log('Trustline Submit Response', submitResponse)
+}
+
+sendMoney(myAddress, mySecret, myDest)
