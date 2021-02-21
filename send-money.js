@@ -6,7 +6,7 @@ export const api = new RippleAPI({
   // by Ripple, Inc.
 });
 
-export async function doPrepare(address, destination) {
+async function doPrepare(address, destination) {
   const preparedTx = await api.prepareTransaction({
     TransactionType : "Payment",
     Account : address,
@@ -16,7 +16,7 @@ export async function doPrepare(address, destination) {
   return preparedTx;
 }
 
-export function signTransaction(pTx, mySecret) {
+function signTransaction(pTx, mySecret) {
   const response = api.sign(pTx.txJSON, mySecret);
   const txID = response.id;
   console.log("Identifying hash:", txID);
@@ -25,7 +25,7 @@ export function signTransaction(pTx, mySecret) {
   return txBlob;
 }
 
-export async function doSubmit(txBlob) {
+async function doSubmit(txBlob) {
   const latestLedgerVersion = await api.getLedgerVersion();
 
   const result = await api.submit(txBlob);
@@ -45,34 +45,33 @@ export async function sendXrp(myAddress, mySecret, myDest) {
   await util.doSubmit(txBlob);
 }
 
-export async function enableRippling(srcAddress, srcSecret) {
-  const preppedSettings = await api.prepareSettings(srcAddress, {
+export async function enableRippling(address, secret) {
+  const preppedSettings = await api.prepareSettings(address, {
     defaultRipple : true,
   });
   const submittedSettings = await api.submit(
-      api.sign(preppedSettings.txJSON, srcSecret).signedTransaction);
+      api.sign(preppedSettings.txJSON, secret).signedTransaction);
   console.log("Submitted Set Default Ripple", submittedSettings);
 }
 
-export async function openTrustline(sourceAddress, sourceSecret, genesisAddress,
-                                    currency) {
-  const preparedTrustline = await api.prepareTrustline(sourceAddress, {
+export async function openTrustline(address, secret, target, currency) {
+  const preparedTrustline = await api.prepareTrustline(address, {
     currency,
-    counterparty : genesisAddress,
+    counterparty : target,
     limit : "1000",
     ripplingDisabled : false,
   });
 
   const signature =
-      api.sign(preparedTrustline.txJSON, sourceSecret).signedTransaction;
+      api.sign(preparedTrustline.txJSON, secret).signedTransaction;
 
   const submitResponse = await api.submit(signature);
 
   console.log("Trustline Submit Response", submitResponse);
 }
 
-export async function issueTokens(srcAddress, srcSecret,
-                                  destinationAddress, currency, value) {
+export async function issueTokens(srcAddress, srcSecret, destinationAddress,
+                                  currency, value) {
   const preparedTokenIssuance = await api.preparePayment(srcAddress, {
     source : {
       address : srcAddress,
@@ -103,7 +102,7 @@ export async function issueTokens(srcAddress, srcSecret,
 export async function sendTokens(data) {
   const preparedTokenPayment = await api.preparePayment(data.sourceAddress, {
     source : {
-      address : data.sourceAddress,
+      address : data.srcAddress,
       maxAmount : {
         value : data.value,
         currency : data.currency,
@@ -111,7 +110,7 @@ export async function sendTokens(data) {
       },
     },
     destination : {
-      address : data.destinationAddress,
+      address : data.dstAddress,
       amount : {
         value : data.value,
         currency : data.currency,
