@@ -7,9 +7,9 @@ import * as pg from "pg"
 
 // Connect to the "users" database.
 var config = {
-    user: 'admin',
-    host: 'localhost',
-    database: 'users',
+    user: 'carson',
+    host: 'free-tier.gcp-us-central1.cockroachlabs.cloud',
+    database: 'honest-mole-872.defaultdb',
     port: 26257,
     ssl: {
         ca: fs.readFileSync('certs/ca.crt')
