@@ -590,3 +590,20 @@ label.valid {
     margin-bottom: 10px; } }
 
 /*# sourceMappingURL=style.css.map */
+
+.button{
+  margin-left: 800px;
+}
+
+.text{
+  margin-left: 750px;
+}
+
+.image{
+  tab-size: 100px;
+  height: 200px;
+}
+
+.uplaod{
+  margin-left: 200px;
+}
