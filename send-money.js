@@ -39,21 +39,27 @@ export async function doSubmit(txBlob) {
   return latestLedgerVersion + 1;
 }
 
-export async function enableRippling(genesisAddress, genesisSecret) {
-  const preppedSettings = await api.prepareSettings(genesisAddress, {
+export async function sendXrp(myAddress, mySecret, myDest) {
+  let pTx = await doPrepare(myAddress, myDest);
+  let txBlob = await util.signTransaction(pTx, mySecret);
+  await util.doSubmit(txBlob);
+}
+
+export async function enableRippling(srcAddress, srcSecret) {
+  const preppedSettings = await api.prepareSettings(srcAddress, {
     defaultRipple : true,
   });
   const submittedSettings = await api.submit(
-      api.sign(preppedSettings.txJSON, genesisSecret).signedTransaction);
+      api.sign(preppedSettings.txJSON, srcSecret).signedTransaction);
   console.log("Submitted Set Default Ripple", submittedSettings);
 }
 
 export async function openTrustline(sourceAddress, sourceSecret, genesisAddress,
-                             currency) {
+                                    currency) {
   const preparedTrustline = await api.prepareTrustline(sourceAddress, {
     currency,
     counterparty : genesisAddress,
-    limit : "100000",
+    limit : "1000",
     ripplingDisabled : false,
   });
 
@@ -65,15 +71,15 @@ export async function openTrustline(sourceAddress, sourceSecret, genesisAddress,
   console.log("Trustline Submit Response", submitResponse);
 }
 
-export async function issueTokens(genesisAddress, genesisSecret, destinationAddress,
-                           currency, value) {
-  const preparedTokenIssuance = await api.preparePayment(genesisAddress, {
+export async function issueTokens(srcAddress, srcSecret,
+                                  destinationAddress, currency, value) {
+  const preparedTokenIssuance = await api.preparePayment(srcAddress, {
     source : {
-      address : genesisAddress,
+      address : srcAddress,
       maxAmount : {
         value : value,
         currency,
-        counterparty : genesisAddress,
+        counterparty : srcAddress,
       },
     },
     destination : {
@@ -81,12 +87,12 @@ export async function issueTokens(genesisAddress, genesisSecret, destinationAddr
       amount : {
         value : value,
         currency,
-        counterparty : genesisAddress,
+        counterparty : srcAddress,
       },
     },
   });
   const issuanceResponse = await api.submit(
-      api.sign(preparedTokenIssuance.txJSON, genesisSecret).signedTransaction);
+      api.sign(preparedTokenIssuance.txJSON, srcSecret).signedTransaction);
 
   console.log("Issuance Submission Response", issuanceResponse);
 }

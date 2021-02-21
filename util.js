@@ -11,5 +11,3 @@ export function genHexString(len) {
     else{
         return output
 }}
-
-console.log(genHexString(40))
