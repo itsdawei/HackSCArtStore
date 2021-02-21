@@ -1,8 +1,8 @@
-import { RippleAPI } from "ripple-lib"
+import {RippleAPI} from "ripple-lib"
 
 const ADDRESS = "rQqvCc8TMsFDqRQuZGe2ksSvdsZMmmJ3o";
 const SECRET = "shZN3zqASwKQ8EwXCPmn9hMQc8H5j";
-const DESTINATION = "rpeUYxTdoGppcVnwFcepnr9TFf3bpqWhQX";
+const DESTINATION = "rw5f4BS4rAiGJ3wvKfzsCQVF5ykufoAQDR";
 const CURRENCY = "EUR";
 
 const api = new RippleAPI({
@@ -40,9 +40,9 @@ async function sendMoney(myAddress, mySecret, myDest, CURRENCY) {
 async function doPrepare(address, destination) {
   const preparedTx = await api.prepareTransaction({
     TransactionType : "Payment",
-    Account : myAddress,
+    Account : address,
     Amount : "2000000",
-    Destination : myDest,
+    Destination : destination,
   });
   return preparedTx;
 }
@@ -124,7 +124,6 @@ async function issueTokens(genesisAddress, genesisSecret, destinationAddress,
 
 /**
  * send a NRT from user A to user B
- * @param {*} data
  */
 async function sendTokens(data) {
   const preparedTokenPayment = await api.preparePayment(data.sourceAddress, {
