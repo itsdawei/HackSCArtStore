@@ -1,43 +1,12 @@
 import {RippleAPI} from "ripple-lib"
 
-const ADDRESS = "rQqvCc8TMsFDqRQuZGe2ksSvdsZMmmJ3o";
-const SECRET = "shZN3zqASwKQ8EwXCPmn9hMQc8H5j";
-const DESTINATION = "rw5f4BS4rAiGJ3wvKfzsCQVF5ykufoAQDR";
-const CURRENCY = "EUR";
-
-const api = new RippleAPI({
+export const api = new RippleAPI({
   server :
       "wss://s.altnet.rippletest.net:51233", // Public rippled server hosted
   // by Ripple, Inc.
 });
 
-async function sendMoney(myAddress, mySecret, myDest, CURRENCY) {
-  api.on("error",
-         (errorCode,
-          errorMessage) => { console.log(errorCode + ": " + errorMessage); });
-  api.on("connected", () => { console.log("connected"); });
-  api.on("disconnected", (code) => {
-    // code - [close
-    // code](https://developer.mozilla.org/en-US/docs/Web/API/CloseEvent) sent
-    // by the server will be 1000 if this was normal closure
-    console.log("disconnected, code:", code);
-  });
-
-  try {
-    await api.connect();
-    await enableRippling(myAddress, mySecret);
-    await openTrustline(myAddress, mySecret, myDest, CURRENCY);
-    await issueTokens(myAddress, mySecret, myDest, CURRENCY, "1", 0.1);
-    let pTx = await doPrepare(myAddress, myDest);
-    let txBlob = await signTransaction(pTx, mySecret);
-    await doSubmit(txBlob);
-    await api.disconnect();
-  } catch (e) {
-    console.error(e);
-  }
-}
-
-async function doPrepare(address, destination) {
+export async function doPrepare(address, destination) {
   const preparedTx = await api.prepareTransaction({
     TransactionType : "Payment",
     Account : address,
@@ -47,7 +16,7 @@ async function doPrepare(address, destination) {
   return preparedTx;
 }
 
-function signTransaction(pTx, mySecret) {
+export function signTransaction(pTx, mySecret) {
   const response = api.sign(pTx.txJSON, mySecret);
   const txID = response.id;
   console.log("Identifying hash:", txID);
@@ -56,7 +25,7 @@ function signTransaction(pTx, mySecret) {
   return txBlob;
 }
 
-async function doSubmit(txBlob) {
+export async function doSubmit(txBlob) {
   const latestLedgerVersion = await api.getLedgerVersion();
 
   const result = await api.submit(txBlob);
@@ -70,7 +39,7 @@ async function doSubmit(txBlob) {
   return latestLedgerVersion + 1;
 }
 
-async function enableRippling(genesisAddress, genesisSecret) {
+export async function enableRippling(genesisAddress, genesisSecret) {
   const preppedSettings = await api.prepareSettings(genesisAddress, {
     defaultRipple : true,
   });
@@ -79,7 +48,7 @@ async function enableRippling(genesisAddress, genesisSecret) {
   console.log("Submitted Set Default Ripple", submittedSettings);
 }
 
-async function openTrustline(sourceAddress, sourceSecret, genesisAddress,
+export async function openTrustline(sourceAddress, sourceSecret, genesisAddress,
                              currency) {
   const preparedTrustline = await api.prepareTrustline(sourceAddress, {
     currency,
@@ -96,7 +65,7 @@ async function openTrustline(sourceAddress, sourceSecret, genesisAddress,
   console.log("Trustline Submit Response", submitResponse);
 }
 
-async function issueTokens(genesisAddress, genesisSecret, destinationAddress,
+export async function issueTokens(genesisAddress, genesisSecret, destinationAddress,
                            currency, value) {
   const preparedTokenIssuance = await api.preparePayment(genesisAddress, {
     source : {
@@ -125,7 +94,7 @@ async function issueTokens(genesisAddress, genesisSecret, destinationAddress,
 /**
  * send a NRT from user A to user B
  */
-async function sendTokens(data) {
+export async function sendTokens(data) {
   const preparedTokenPayment = await api.preparePayment(data.sourceAddress, {
     source : {
       address : data.sourceAddress,
@@ -151,5 +120,4 @@ async function sendTokens(data) {
   console.log("Token Payment Response", tokenPaymentResponse);
 }
 
-// for testing purposes
-sendMoney(ADDRESS, SECRET, DESTINATION, CURRENCY);
+// sendMoney(ADDRESS, SECRET, DESTINATION, CURRENCY);
