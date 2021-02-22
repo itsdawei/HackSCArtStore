@@ -11,3 +11,6 @@ export function genHexString(len) {
     else{
         return output
 }}
+
+// hashing the meta data of the NFT
+// doesn't have to be a hash

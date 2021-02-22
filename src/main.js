@@ -48,9 +48,8 @@ async function processBuy(srcAddress, srcSecret, dstAddress, mstAddress, currenc
     await api.disconnect();
 }
 
-// for testing
-// sendMoney(ADDRESS, SECRET, DESTINATION, CURRENCY);
-// const curr = genHexString(40);
 // const curr = "015841551A748AD2C1F76FF6ECB0CCCD00000000";
+// for testing
+// const curr = genHexString(40);
 // createNFT(SRCADDRESS, SRCSECRET, MSTADDRESS, curr);
 // processBuy(SRCADDRESS, SRCSECRET, DSTADDRESS, MSTADDRESS, curr, "1000");
