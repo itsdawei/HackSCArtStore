@@ -449,6 +449,24 @@ label.valid {
 
 .material-icons-name {
   font-size: 18px; }
+  .button{
+    margin-left: 900px;
+    margin-top: 100px;
+  }
+  
+  .text{
+    margin-left: 750px;
+  }
+  
+  .image{
+    tab-size: 100px;
+    height: 200px;
+  }
+  
+  .uplaod{
+    margin-left: 200px;
+  }
+  
 
 .signin-content {
   padding-top: 67px;
@@ -591,19 +609,3 @@ label.valid {
 
 /*# sourceMappingURL=style.css.map */
 
-.button{
-  margin-left: 800px;
-}
-
-.text{
-  margin-left: 750px;
-}
-
-.image{
-  tab-size: 100px;
-  height: 200px;
-}
-
-.uplaod{
-  margin-left: 200px;
-}
