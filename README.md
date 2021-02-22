@@ -7,6 +7,7 @@ We as a team saw this as an opportunity to introduce artists to the crypto space
 1. Artist can sign up on our platform and upload their digital art and create an NFT for the art on the ripple ledger
 2. Anyone on the platform can buy artist's art (NFT) using XRP as a mode of transaction
 3. By buying the NFT the ownership of the digital collectible will transfer to the buyer from the seller  
+
 _In a nutshell, a marketplace for the artist to sell their digital collectibles on the blockchain without paying a huge amount of gas fee to initiate their NFT's._
  
 ## How we built it
