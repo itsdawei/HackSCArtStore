@@ -11,7 +11,7 @@ function genHexString(len) {
     else{
         return output
 }}
-
+console.log(genHexString(10))
 console.log(genHexString(20))
 console.log(genHexString(40))
 
