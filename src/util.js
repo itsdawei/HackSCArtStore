@@ -1,5 +1,5 @@
 //recursively allows for unique hashes
-
+//done by
 export function genHexString(len) {
     const hex = '0123456789ABCDEF';
     let output = '';
@@ -13,3 +13,6 @@ export function genHexString(len) {
     else{
         return output
 }}
+
+// hashing the meta data of the NFT
+// doesn't have to be a hash

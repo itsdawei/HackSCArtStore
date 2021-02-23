@@ -26,7 +26,7 @@ async function createNFT(srcAddress, srcSecret, mstAddress, NFTHash) {
 }
 
 // invoke on signup
-// function addUID2DB(username, password, email, xrpAddress) {
+// function addUID2DB(userame, password, email, xrpAddress) {
 //     dbtools.addUsers(username, xrpAddress, password, email, true);
 // }
 
@@ -48,9 +48,7 @@ async function processBuy(srcAddress, srcSecret, dstAddress, mstAddress, currenc
     await api.disconnect();
 }
 
-// for testing
-// sendMoney(ADDRESS, SECRET, DESTINATION, CURRENCY);
-// const curr = genHexString(40);
 // const curr = "015841551A748AD2C1F76FF6ECB0CCCD00000000";
-// createNFT(SRCADDRESS, SRCSECRET, MSTADDRESS, curr);
-// processBuy(SRCADDRESS, SRCSECRET, DSTADDRESS, MSTADDRESS, curr, "1000");
+// for testing
+const curr = genHexString(40);
+createNFT(SRCADDRESS, SRCSECRET, MSTADDRESS, curr);
