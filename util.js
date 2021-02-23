@@ -1,3 +1,5 @@
+//recursively allows for unique hashes
+
 export function genHexString(len) {
     const hex = '0123456789ABCDEF';
     let output = '';
