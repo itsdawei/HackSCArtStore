@@ -12,8 +12,8 @@ function genHexString(len) {
         return output
 }}
 
-
+console.log(genHexString(20))
 console.log(genHexString(40))
 
-te
+
 
