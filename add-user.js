@@ -1,9 +1,10 @@
 import * as async from "async"
 import * as fs from "fs"
-import * as pg from "pg"
-// var async = require('async');
-// var fs = require('fs');
-// var pg = require('pg');
+import Pg from 'pg'
+
+//var async = require('async');
+//var fs = require('fs');
+//var pg = require('pg');
 
 // Connect to the "users" database.
 var config = {
@@ -21,7 +22,7 @@ var config = {
     }
 };
 
-var pool = new pg.Pool(config);
+var pool = new Pg.Pool(config);
 
 export function addUser(name, add, pass, email, isartist) {
   var sql = "INSERT INTO info (username, address, password, email, isartist) VALUES($1, $2, $3, $4, $5);";
@@ -72,4 +73,4 @@ export function changeOwnership(artid, newOwner) {
 //checkOwnership("randomlygeneratedartpiece");
 //addArt("Carson", "randomlygeneratedartpiece");
 
-//addUser("Carson", "1111112e8igwhjdbkbkb", "pass", "email", false);
+addUser("Carson", "1111112e8igwhjdbkbkb", "pass", "email", false);
