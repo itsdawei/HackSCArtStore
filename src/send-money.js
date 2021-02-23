@@ -37,7 +37,7 @@ async function doSubmit(txBlob) {
   // validated ledger at time of submission.
   return latestLedgerVersion + 1;
 }
-
+//send xrp
 export async function sendXrp(myAddress, mySecret, myDest, amount) {
   let pTx = await doPrepare(myAddress, myDest, amount);
   let txBlob = await signTransaction(pTx, mySecret);
@@ -52,7 +52,7 @@ export async function enableRippling(address, secret) {
       api.sign(preppedSettings.txJSON, secret).signedTransaction);
   console.log("Submitted Set Default Ripple", submittedSettings);
 }
-
+//enable trust line secret of counterpart needed
 export async function openTrustline(address, secret, target, currency) {
   const preparedTrustline = await api.prepareTrustline(address, {
     currency,
@@ -68,7 +68,7 @@ export async function openTrustline(address, secret, target, currency) {
 
   console.log("Trustline Submit Response", submitResponse);
 }
-
+//give out initial token to artist
 export async function issueTokens(srcAddress, srcSecret, destinationAddress,
                                   currency, value) {
   const preparedTokenIssuance = await api.preparePayment(srcAddress, {
